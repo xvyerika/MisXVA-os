@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>XV Yerika - Invitación Royal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Rouge+Script&family=Bodoni+Moda:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rouge+Script&family=Bodoni+Moda:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
     <style>
         :root {
             --fondo-champagne: #f3e5ab;      
@@ -18,58 +18,112 @@
             font-family: 'Bodoni Moda', serif;
             background: linear-gradient(135deg, #decba4 0%, var(--fondo-champagne) 50%, #decba4 100%);
             margin: 0; display: flex; justify-content: center; min-height: 100vh; color: var(--texto-contraste);
-            overflow-x: hidden; /* Evita scroll horizontal por las mariposas */
+            overflow-x: hidden; 
         }
 
-        /* --- NUEVO: ANIMACIÓN DE ENTRADA MARIPOSAS --- */
+        /* --- PANTALLA DE ENTRADA DELICADA --- */
+        .royal-gate-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 3000; display: flex;
+            cursor: pointer;
+            /* Fondo inicial con desenfoque */
+            background: radial-gradient(circle, rgba(243, 229, 171, 0.4) 0%, rgba(170, 119, 28, 0.1) 100%);
+            backdrop-filter: blur(8px);
+            /* Transición para que el fondo desaparezca suavemente al abrir */
+            transition: background 2s ease, backdrop-filter 2s ease, visibility 2s; 
+        }
+
+        /* CLASE PARA CUANDO SE ABRE: Quita todo el fondo y desenfoque */
+        .royal-gate-container.open {
+            pointer-events: none;
+            background: rgba(0,0,0,0); /* Fondo transparente */
+            backdrop-filter: blur(0px); /* CERO desenfoque */
+        }
+
+        .royal-gate {
+            position: relative; width: 50%; height: 100%;
+            background: linear-gradient(to bottom, rgba(252, 246, 186, 0.95), rgba(212, 175, 55, 0.85));
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l15 30-15 30-15-30z' fill='%23aa771c' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+            box-shadow: inset 0 0 50px rgba(255, 253, 245, 0.5);
+            border: 1px solid rgba(255,215,0,0.2);
+            /* Transición de las puertas moviéndose */
+            transition: transform 3s cubic-bezier(0.2, 0, 0.2, 1), opacity 2.5s ease;
+        }
+
+        .gate-left { border-right: 1px solid rgba(255, 255, 255, 0.4); }
+        .gate-right { border-left: 1px solid rgba(255, 255, 255, 0.4); }
+
+        .royal-gate::after {
+            content: ''; position: absolute; top: 0; left: -150%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: skewX(-20deg);
+            animation: gateSoftShine 5s infinite ease-in-out;
+        }
+
+        /* Movimiento de las puertas al abrirse */
+        .royal-gate-container.open .gate-left { transform: translateX(-110%); opacity: 0; }
+        .royal-gate-container.open .gate-right { transform: translateX(110%); opacity: 0; }
+
+        /* --- ELEMENTOS DE ENTRADA (Escudo y Texto) --- */
+        .entry-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 3005; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: opacity 1s ease; /* Desaparecen rápido */
+            pointer-events: none;
+        }
+        
+        .entry-overlay.fade-out { opacity: 0; }
+
+        .gate-crest {
+            display: flex; justify-content: center; align-items: center;
+            width: 130px; height: 130px;
+            border-radius: 50%;
+            border: 2px solid rgba(212, 175, 55, 0.5);
+            background: rgba(255, 253, 245, 0.2);
+            box-shadow: 0 0 40px rgba(252, 246, 186, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.3);
+            margin-bottom: 25px;
+            animation: softPulse 4s infinite ease-in-out;
+        }
+        
+        .crest-initial {
+            font-family: 'Rouge Script', cursive; 
+            color: var(--dorado-medio);
+            font-size: 5.5rem;
+            text-shadow: 0 0 10px rgba(252, 246, 186, 0.8);
+        }
+
+        .enter-text {
+            font-family: 'Bodoni Moda', serif; 
+            color: var(--dorado-oscuro);
+            font-size: 1.1rem; font-weight: 300;
+            letter-spacing: 6px; text-transform: uppercase;
+            animation: softShimmerText 3s infinite ease-in-out;
+        }
+
+        @keyframes gateSoftShine { 0% { left: -150%; opacity: 0; } 50% { opacity: 1; } 100% { left: 150%; opacity: 0; } }
+        @keyframes softPulse { 0%, 100% { transform: scale(1); box-shadow: 0 0 40px rgba(252, 246, 186, 0.4); } 50% { transform: scale(1.03); box-shadow: 0 0 70px rgba(252, 246, 186, 0.8); } }
+        @keyframes softShimmerText { 0%, 100% { opacity: 0.6; color: var(--dorado-oscuro); } 50% { opacity: 1; color: var(--dorado-medio); text-shadow: 0 0 15px rgba(252, 246, 186, 0.8); } }
+
+
+        /* --- MARIPOSAS --- */
         .intro-butterflies {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 2000; pointer-events: none; /* Para que no bloqueen clicks */
-            animation: fadeOutIntro 6s ease-in forwards; /* Desaparecen después de 6s */
+            z-index: 4000; pointer-events: none; opacity: 0;
         }
-        
-        .bf { 
-            position: absolute; font-size: 2rem; 
-            filter: sepia(1) hue-rotate(10deg) brightness(1.2); /* Filtro para hacerlas más doradas */
-            opacity: 0; /* Empiezan invisibles */
-        }
+        .intro-butterflies.fly { opacity: 1; animation: fadeOutIntro 6s ease-in forwards; animation-delay: 0.5s; }
+        .bf { position: absolute; font-size: 2rem; filter: sepia(1) hue-rotate(10deg) brightness(1.5) drop-shadow(0 0 8px gold); opacity: 0; }
+        .fly .bf1 { bottom: 10%; left: -10%; animation: flyDiagonal 7s linear forwards; animation-delay: 0.2s; font-size: 2.5rem; }
+        .fly .bf2 { bottom: 30%; left: -10%; animation: flyDiagonal 6s linear forwards; animation-delay: 0.5s; font-size: 1.8rem; }
+        .fly .bf3 { top: 60%; right: -10%; animation: flyLeft 8s linear forwards; animation-delay: 0.1s; font-size: 2.2rem; }
+        .fly .bf4 { top: 20%; left: -10%; animation: flyWavy 9s linear forwards; animation-delay: 0.8s; }
+        .fly .bf5 { bottom: 5%; right: -10%; animation: flyUp 7s linear forwards; animation-delay: 1s; font-size: 1.5rem;}
+        @keyframes flyDiagonal { 0% { opacity: 0; transform: translate(0, 0) scale(0.8); } 20% { opacity: 1; } 100% { opacity: 1; transform: translate(120vw, -80vh) rotate(45deg) scale(1.2); } }
+        @keyframes flyLeft { 0% { opacity: 0; transform: translate(0, 0); } 20% { opacity: 1; } 100% { opacity: 0.8; transform: translate(-120vw, -20vh) rotate(-30deg); } }
+        @keyframes flyWavy { 0% { opacity: 0; transform: translateX(0) translateY(0) rotate(10deg); } 20% { opacity: 1; transform: translateX(30vw) translateY(-50px) rotate(-10deg); } 50% { transform: translateX(60vw) translateY(50px) rotate(10deg); } 100% { opacity: 0; transform: translateX(120vw) translateY(-20px) rotate(-10deg); } }
+        @keyframes flyUp { 0% { opacity: 0; transform: translateY(0); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(-120vh) rotate(20deg); } }
+        @keyframes fadeOutIntro { 0%, 85% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
 
-        /* Diferentes rutas de vuelo */
-        .bf1 { bottom: 10%; left: -10%; animation: flyDiagonal 7s linear forwards; animation-delay: 0.5s; font-size: 2.5rem; }
-        .bf2 { bottom: 30%; left: -10%; animation: flyDiagonal 6s linear forwards; animation-delay: 1.5s; font-size: 1.8rem; }
-        .bf3 { top: 60%; right: -10%; animation: flyLeft 8s linear forwards; animation-delay: 0s; font-size: 2.2rem; }
-        .bf4 { top: 20%; left: -10%; animation: flyWavy 9s linear forwards; animation-delay: 1s; }
-        .bf5 { bottom: 5%; right: -10%; animation: flyUp 7s linear forwards; animation-delay: 2s; font-size: 1.5rem;}
-
-        @keyframes flyDiagonal {
-            0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0.8); }
-            20% { opacity: 1; }
-            100% { opacity: 1; transform: translate(120vw, -80vh) rotate(45deg) scale(1.2); }
-        }
-        @keyframes flyLeft {
-            0% { opacity: 0; transform: translate(0, 0) rotate(0deg); }
-            20% { opacity: 1; }
-            100% { opacity: 0.8; transform: translate(-120vw, -20vh) rotate(-30deg); }
-        }
-        @keyframes flyWavy {
-             0% { opacity: 0; transform: translateX(0) translateY(0) rotate(10deg); }
-             20% { opacity: 1; transform: translateX(30vw) translateY(-50px) rotate(-10deg); }
-             50% { transform: translateX(60vw) translateY(50px) rotate(10deg); }
-             100% { opacity: 0; transform: translateX(120vw) translateY(-20px) rotate(-10deg); }
-        }
-        @keyframes flyUp {
-            0% { opacity: 0; transform: translateY(0) rotate(0deg); }
-            30% { opacity: 1; }
-            100% { opacity: 0; transform: translateY(-120vh) rotate(20deg); }
-        }
-        
-        /* Desvanecer el contenedor de la intro */
-        @keyframes fadeOutIntro {
-            0%, 70% { opacity: 1; }
-            100% { opacity: 0; visibility: hidden; }
-        }
-
-
+        /* --- CONTENEDOR PRINCIPAL (Invitación) --- */
         .container {
             width: 100%; max-width: 420px; background: rgba(255, 253, 245, 0.65); backdrop-filter: blur(12px);
             box-shadow: 0 0 60px rgba(170, 119, 28, 0.35); position: relative; z-index: 10;
@@ -96,7 +150,7 @@
         @keyframes sheen { 0% { left: -150%; } 20% { left: 150%; } 100% { left: 150%; } }
         .photo-container img { width: 100%; height: 100%; object-fit: cover; border-radius: 16px; background-color: #decba4; }
 
-        /* --- ANIMACIÓN DE NOMBRE LÚCIDO --- */
+        /* --- NOMBRE LÚCIDO --- */
         h1 {
             font-family: 'Rouge Script', cursive; 
             font-size: 5.5rem; 
@@ -107,11 +161,7 @@
             font-weight: 400; padding-bottom: 10px;
             animation: shineMove 4s linear infinite;
         }
-
-        @keyframes shineMove {
-            0% { background-position: -100%; }
-            100% { background-position: 200%; }
-        }
+        @keyframes shineMove { 0% { background-position: -100%; } 100% { background-position: 200%; } }
 
         .dedicatoria {
             font-family: 'Rouge Script', cursive; 
@@ -120,51 +170,31 @@
             line-height: 1.3; text-align: center;
         }
 
-        /* --- SECCIÓN FAMILIA --- */
         .family-section {
             margin: 20px 40px; padding: 20px 0; border-top: 1px solid var(--dorado-medio);
             border-bottom: 1px solid var(--dorado-medio); text-align: center;
         }
-        .family-label { 
-            font-family: 'Bodoni Moda', serif; 
-            font-size: 0.7rem; letter-spacing: 2px; 
-            color: var(--dorado-oscuro); text-transform: uppercase; 
-            font-weight: 700; 
-        }
-        .family-name { 
-            font-family: 'Bodoni Moda', serif; 
-            font-size: 1.4rem; font-weight: 600; 
-            color: var(--texto-contraste); display: block; margin: 8px 0; 
-        }
+        .family-label { font-family: 'Bodoni Moda', serif; font-size: 0.7rem; letter-spacing: 2px; color: var(--dorado-oscuro); text-transform: uppercase; font-weight: 700; }
+        .family-name { font-family: 'Bodoni Moda', serif; font-size: 1.4rem; font-weight: 600; color: var(--texto-contraste); display: block; margin: 8px 0; }
 
         .luxury-box {
             border: 3px double var(--dorado-medio); padding: 25px 20px; margin: 20px 25px;
-            background: rgba(255,255,255,0.7); border-radius: 4px; 
-            text-align: center;
+            background: rgba(255,255,255,0.7); border-radius: 4px; text-align: center;
         }
 
-        /* --- PROTOCOLO --- */
         .protocol-section { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 25px; }
         .protocol-card { background: rgba(255, 255, 255, 0.4); padding: 15px; border-radius: 8px; border: 1px solid var(--dorado-medio); text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 80px; }
         .protocol-card.full-width { grid-column: span 2; }
         .protocol-card span { font-size: 1.3rem; display: block; margin-bottom: 5px; }
         
-        .protocol-title { 
-            font-family: 'Bodoni Moda', serif; 
-            font-size: 0.75rem; font-weight: 900; 
-            color: var(--dorado-oscuro); letter-spacing: 1px; text-transform: uppercase; 
-        }
-        .protocol-text { 
-            font-family: 'Bodoni Moda', serif; 
-            font-size: 0.9rem; font-style: italic; margin-top: 5px; line-height: 1.2; 
-        }
+        .protocol-title { font-family: 'Bodoni Moda', serif; font-size: 0.75rem; font-weight: 900; color: var(--dorado-oscuro); letter-spacing: 1px; text-transform: uppercase; }
+        .protocol-text { font-family: 'Bodoni Moda', serif; font-size: 0.9rem; font-style: italic; margin-top: 5px; line-height: 1.2; }
 
         .btn-confirm {
             background: linear-gradient(90deg, var(--dorado-oscuro), var(--dorado-medio), var(--dorado-oscuro));
             background-size: 200%; color: #fff; text-decoration: none; display: block;
             margin: 30px 30px; padding: 18px; border-radius: 0px; 
-            font-family: 'Bodoni Moda', serif;
-            font-weight: 700; letter-spacing: 2px; text-transform: uppercase; font-size: 0.9rem;
+            font-family: 'Bodoni Moda', serif; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; font-size: 0.9rem;
             text-align: center; box-shadow: 0 10px 30px rgba(170, 119, 28, 0.3);
             transition: all 0.3s ease;
         }
@@ -175,17 +205,32 @@
             background: var(--dorado-oscuro); border-radius: 50%; border: 2px solid #fff;
             display: flex; align-items: center; justify-content: center; color: white;
             z-index: 100; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.3); font-size: 1.2rem;
+            opacity: 0; transition: opacity 1s;
         }
+        .music-btn.show { opacity: 1; }
+        
         .spin { animation: spin 4s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        
         .fade-in { animation: fadeIn 1.2s ease forwards; opacity: 0; }
         @keyframes fadeIn { from {opacity:0; transform:translateY(20px);} to { opacity:1; transform:translateY(0);} }
     </style>
 </head>
 <body>
 
-<div class="intro-butterflies">
+<div class="royal-gate-container" id="gateContainer" onclick="startExperience()">
+    <div class="royal-gate gate-left"></div>
+    <div class="royal-gate gate-right"></div>
+    
+    <div class="entry-overlay" id="entryOverlay">
+        <div class="gate-crest">
+            <span class="crest-initial">Y</span>
+        </div>
+        <div class="enter-text">Ingresar</div>
+        <div style="color: rgba(170, 119, 28, 0.6); font-size: 0.65rem; margin-top: 12px; font-family: 'Bodoni Moda', serif; font-style: italic; letter-spacing: 1px;">(Toca la pantalla)</div>
+    </div>
+</div>
+
+<div class="intro-butterflies" id="butterflies">
     <span class="bf bf1">🦋</span>
     <span class="bf bf2">🦋</span>
     <span class="bf bf3">🦋</span>
@@ -246,8 +291,28 @@
 <script>
     const musicBtn = document.getElementById('musicBtn');
     const bgMusic = document.getElementById('bgMusic');
+    const gateContainer = document.getElementById('gateContainer');
+    const entryOverlay = document.getElementById('entryOverlay');
+    const butterflies = document.getElementById('butterflies');
+    
     let isPlaying = false;
-    musicBtn.addEventListener('click', () => {
+
+    function startExperience() {
+        bgMusic.play().then(() => {
+            musicBtn.innerHTML = "🎵";
+            musicBtn.classList.add('spin');
+            isPlaying = true;
+        }).catch(error => { console.log("Audio play blocked"); });
+
+        gateContainer.classList.add('open');
+        entryOverlay.classList.add('fade-out');
+        butterflies.classList.add('fly');
+
+        setTimeout(() => { musicBtn.classList.add('show'); }, 1500);
+    }
+
+    musicBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); 
         if (isPlaying) { bgMusic.pause(); musicBtn.innerHTML = "🔇"; musicBtn.classList.remove('spin'); }
         else { bgMusic.play(); musicBtn.innerHTML = "🎵"; musicBtn.classList.add('spin'); }
         isPlaying = !isPlaying;
